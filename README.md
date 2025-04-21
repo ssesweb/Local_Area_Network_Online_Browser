@@ -28,3 +28,6 @@
 
 ## 许可证
 MIT License
+
+## 项目截图
+![首页预览](./Resource/首页截图.png)
