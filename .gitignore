@@ -20,3 +20,6 @@ yarn-error.log*
 # 系统
 .DS_Store
 Thumbs.db
+
+# 忽略缩略图目录
+app/static/thumbnails/
