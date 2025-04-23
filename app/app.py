@@ -128,6 +128,9 @@ def generate_video_thumbnail(video_path):
         thumbnails_dir = os.path.join(app.root_path, 'static', 'thumbnails')
         os.makedirs(thumbnails_dir, exist_ok=True)
         
+        # 添加自动清理机制
+        clean_thumbnail_cache(thumbnails_dir)
+        
         # 使用视频文件的哈希值作为缩略图文件名，确保唯一性
         import hashlib
         video_hash = hashlib.md5(video_path.encode()).hexdigest()
@@ -148,7 +151,8 @@ def generate_video_thumbnail(video_path):
             thumbnail_path
         ]
         
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=10)
+        # 修改这里：添加encoding参数解决编码问题
+        result = subprocess.run(cmd, capture_output=True, encoding='utf-8', errors='ignore', timeout=10)
         
         # 如果提取第5秒失败，则尝试提取首帧
         if result.returncode != 0:
@@ -159,7 +163,7 @@ def generate_video_thumbnail(video_path):
                 '-q:v', '2',
                 thumbnail_path
             ]
-            subprocess.run(cmd, capture_output=True, text=True, timeout=10)
+            subprocess.run(cmd, capture_output=True, encoding='utf-8', errors='ignore', timeout=10)
         
         # 检查缩略图是否成功生成
         if os.path.exists(thumbnail_path) and os.path.getsize(thumbnail_path) > 0:
@@ -249,6 +253,37 @@ def get_file_icon(filename):
         '.rar': 'fa-file-archive',
     }
     return icon_map.get(ext, 'fa-file')
+
+def clean_thumbnail_cache(cache_dir, max_size_mb=500, min_size_mb=10):
+    """清理缓存文件夹，保持大小在合理范围内"""
+    try:
+        # 计算当前缓存大小(MB)
+        total_size = sum(os.path.getsize(f) for f in os.scandir(cache_dir) if f.is_file()) / (1024*1024)
+        
+        if total_size > max_size_mb:
+            print(f"缓存大小 {total_size:.2f}MB 超过限制 {max_size_mb}MB，开始清理...")
+            
+            # 获取所有文件并按修改时间排序(旧文件在前)
+            files = sorted([f for f in os.scandir(cache_dir) if f.is_file()], 
+                         key=lambda x: x.stat().st_mtime)
+            
+            # 逐个删除最旧的文件直到小于min_size_mb
+            deleted_size = 0
+            for file in files:
+                if total_size - deleted_size <= min_size_mb:
+                    break
+                    
+                file_size = os.path.getsize(file) / (1024*1024)
+                try:
+                    os.remove(file.path)
+                    deleted_size += file_size
+                    print(f"已删除旧缓存文件: {file.name} (大小: {file_size:.2f}MB)")
+                except Exception as e:
+                    print(f"删除文件 {file.name} 失败: {e}")
+            
+            print(f"清理完成，当前缓存大小: {total_size - deleted_size:.2f}MB")
+    except Exception as e:
+        print(f"清理缓存时出错: {e}")
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
