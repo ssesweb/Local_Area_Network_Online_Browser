@@ -23,3 +23,5 @@ Thumbs.db
 
 # 忽略缩略图目录
 app/static/thumbnails/
+# 忽略临时文件
+temp

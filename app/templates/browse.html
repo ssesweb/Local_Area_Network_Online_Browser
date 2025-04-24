@@ -38,41 +38,7 @@
     <div class="row g-0">
         <!-- 可折叠侧边栏 -->
         <!-- 在面包屑导航下方添加常驻展开按钮 -->
-        <nav aria-label="breadcrumb" class="pt-3 position-relative">
-            <button class="btn btn-purple position-absolute start-0 ms-3 d-lg-none" 
-                    data-bs-toggle="collapse" 
-                    data-bs-target="#sidebar"
-                    style="z-index: 1000; top: 50%; transform: translateY(-50%);">
-                <i class="fas fa-bars"></i>
-            </button>
-            <ol class="breadcrumb bg-dark border-primary p-3 rounded-3 ps-5">
-                <li class="breadcrumb-item">
-                    <a href="{{ url_for('index') }}" class="text-purple-400"><i class="fas fa-home"></i></a>
-                </li>
-                {% set parts = [] %}
-                {% for part in current_path.split('\\') if part %}
-                    {% if loop.first %}
-                        {% set _ = parts.append(part + '\\') %}
-                    {% else %}
-                        {% set _ = parts.append(part) %}
-                    {% endif %}
-                {% endfor %}
-                
-                {% for part in parts %}
-                    <li class="breadcrumb-item {% if not loop.last %}active{% endif %}">
-                        {% if loop.last %}
-                            {{ part }}
-                        {% else %}
-                            <a href="{{ url_for('browse', dirpath=parts[:loop.index]|join('\\')) }}">
-                                {{ part }}
-                                {% if loop.first %}<i class="fas fa-level-up-alt ms-1"></i>{% endif %}
-                            </a>
-                        {% endif %}
-                    </li>
-                {% endfor %}
-            </ol>
-        </nav>
-        
+    
         <!-- 修改侧边栏关闭按钮逻辑 -->
         <!-- 修改汉堡菜单按钮显示逻辑 -->
         <button class="btn btn-purple position-absolute start-0 ms-3" 

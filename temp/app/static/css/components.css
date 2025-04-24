@@ -1,0 +1,112 @@
+/* 视图切换按钮 */
+.view-toggle {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.view-toggle button {
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    background: #fff;
+    cursor: pointer;
+}
+
+.view-toggle button.active {
+    background: #007bff;
+    color: white;
+}
+
+/* 列表视图样式 */
+.list-view .file-item {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+/* 宫格视图样式 */
+.grid-view {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+.grid-view .file-item {
+    /* 文件项样式 */
+    .file-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .file-info {
+        display: flex;
+        align-items: center;
+        flex: 1;
+    }
+    
+    .item-name {
+        margin-left: 10px;
+        max-width: 400px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .file-details {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+    
+    .file-actions {
+        display: flex;
+        gap: 10px;
+    }
+    
+    /* 按钮样式 */
+    .preview-btn, .download-btn {
+        padding: 5px 10px;
+        border: none;
+        background: none;
+        cursor: pointer;
+        color: #666;
+        transition: color 0.3s;
+    }
+    
+    .preview-btn:hover {
+        color: #17a2b8;
+    }
+    
+    .download-btn:hover {
+        color: #28a745;
+    }
+    
+    /* 文件夹图标颜色 */
+    .fa-folder {
+        color: #ffc107;
+    }
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+}
+
+.fa-folder, .fa-file {
+    margin-right: 8px;
+    color: #6c757d;
+    font-size: 1.2em;
+}
+
+.fa-folder {
+    color: #ffc107;
+}
+
+/* 特定文件类型图标颜色 */
+.fa-file-pdf { color: #e63946; }
+.fa-file-word { color: #2b579a; }
+.fa-file-excel { color: #217346; }
+.fa-file-image { color: #6a4c93; }

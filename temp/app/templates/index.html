@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1 class="display-4 mb-4 text-center">文件浏览器</h1>
+    
+    <!-- 系统文件夹卡片 -->
+    {% if system_folders %}
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-info text-white">
+            <i class="fas fa-home me-2"></i>我的文件夹
+        </div>
+        <div class="card-body">
+            <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
+                {% for name, path in system_folders.items() %}
+                <div class="col">
+                    <a href="{{ url_for('browse', dirpath=path) }}" 
+                       class="text-decoration-none">
+                        <div class="card h-100 border-0 shadow-sm hover-shadow">
+                            <div class="card-body text-center">
+                                <i class="fas fa-folder-open fa-3x text-info mb-3"></i>
+                                <h5 class="card-title">{{ name }}</h5>
+                                <small class="text-muted">{{ path }}</small>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- 磁盘驱动器卡片 -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <i class="fas fa-server me-2"></i>磁盘驱动器
+        </div>
+        <div class="card-body">
+            <div class="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-3">
+                {% for drive in drives %}
+                <div class="col">
+                    <a href="{{ url_for('browse', dirpath=drive) }}" 
+                       class="text-decoration-none">
+                        <div class="card h-100 border-0 shadow-sm hover-shadow">
+                            <div class="card-body text-center">
+                                <i class="fas fa-hdd fa-3x text-primary mb-3"></i>
+                                <h5 class="card-title">{{ drive }}</h5>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* 保持原有hover样式 */
+</style>
+{% endblock %}

@@ -1,0 +1,89 @@
+{% for file in files %}
+<div class="col d-flex">
+    <div class="card h-100 shadow-sm file-item w-100">
+        <div class="card-body text-center d-flex flex-column">
+            <div class="flex-grow-1">
+                {% set ext = file.name.split('.')[-1].lower() %}
+                {% if ext in ['jpg', 'jpeg', 'png', 'gif'] %}
+                <img src="{{ url_for('download', filepath=os.path.join(current_path, file.name)) }}" 
+                     class="img-thumbnail mb-2 preview-media cursor-zoom"
+                     alt="{{ file.name }}"
+                     loading="lazy"
+                     data-bs-toggle="modal" 
+                     data-bs-target="#imageModal"
+                     data-img-src="{{ url_for('download', filepath=os.path.join(current_path, file.name)) }}"
+                     onclick="
+                        document.getElementById('fullImage').src = this.getAttribute('data-img-src');
+                        document.body.classList.add('modal-open');
+                     ">
+                <div class="image-zoom-indicator position-absolute top-0 end-0 m-2">
+                    <i class="fas fa-search-plus text-light"></i>
+                </div>
+                {% else %}
+                    {% if ext in ['mp4', 'avi', 'mov', 'mkv'] %}
+                    <div class="video-preview-container mb-2" style="width: 100%;">
+                        {% if file.thumbnail %}
+                        <div class="position-relative">
+                            {% if file.thumbnail %}
+                            <img src="{{ url_for('thumbnail', filepath=file.thumbnail) }}" 
+                                 class="img-thumbnail mb-2 preview-media cursor-zoom"
+                                 alt="{{ file.name }} 缩略图"
+                                 loading="lazy"
+                                 data-bs-toggle="modal"
+                                 data-bs-target="#videoModal"
+                                 data-video-src="{{ url_for('download', filepath=os.path.join(current_path, file.name)) }}"
+                                 onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDAiIGZpbGw9IiM2YzZjNmMiLz48cGF0aCBkPSJNNDAgMzBMNzAgNTAgNDAgNzB6IiBmaWxsPSIjZmZmIi8+PC9zdmc+';"
+                                 onclick="prepareVideoModal(this.getAttribute('data-video-src'))">
+                            {% else %}
+                            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDAiIGZpbGw9IiM2YzZjNmMiLz48cGF0aCBkPSJNNDAgMzBMNzAgNTAgNDAgNzB6IiBmaWxsPSIjZmZmIi8+PC9zdmc+" 
+                                 class="img-thumbnail mb-2 preview-media cursor-zoom"
+                                 alt="{{ file.name }} 默认缩略图"
+                                 loading="lazy"
+                                 data-bs-toggle="modal"
+                                 data-bs-target="#videoModal"
+                                 data-video-src="{{ url_for('download', filepath=os.path.join(current_path, file.name)) }}"
+                                 onclick="prepareVideoModal(this.getAttribute('data-video-src'))">
+                            {% endif %}
+                            <div class="video-play-overlay position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center">
+                                <i class="fas fa-play-circle text-light fa-3x"></i>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="position-relative" 
+                             data-video-src="{{ url_for('download', filepath=os.path.join(current_path, file.name)) }}"
+                             data-bs-toggle="modal"
+                             data-bs-target="#videoModal"
+                             onclick="prepareVideoModal(this.getAttribute('data-video-src'))">
+                            {% if file.thumbnail %}
+                            <img src="{{ url_for('thumbnail', filepath=file.thumbnail) }}" 
+                                 class="img-thumbnail mb-2 preview-media cursor-zoom"
+                                 alt="{{ file.name }} 视频封面"
+                                 loading="lazy">
+                            {% else %}
+                            <img src="{{ url_for('static', filename='images/video-placeholder.jpg') }}" 
+                                 class="img-thumbnail mb-2 preview-media cursor-zoom"
+                                 alt="{{ file.name }} 视频封面"
+                                 loading="lazy">
+                            {% endif %}
+                            <div class="video-play-overlay position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center">
+                                <i class="fas fa-play-circle text-light fa-3x"></i>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% else %}
+                    <i class="fas {{ get_file_icon(file.name) }} text-{{ get_file_color(file.name) }} fa-2x mb-2"></i>
+                    {% endif %}
+                {% endif %}
+                <h6 class="card-title text-truncate mt-2" title="{{ file.name }}">{{ file.name }}</h6>
+            </div>
+            <div class="mt-2">
+                <a href="{{ url_for('download', filepath=os.path.join(current_path, file.name) ) }}" 
+                   class="btn btn-sm btn-outline-secondary w-100">
+                    <i class="fas fa-download"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
